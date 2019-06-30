@@ -6,6 +6,12 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
+sqlalchemy = "*"
+flask = "*"
+marshmallow = "*"
+flask-cors = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.7"
