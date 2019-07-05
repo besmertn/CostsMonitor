@@ -2,17 +2,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from marshmallow import Schema, fields
 
 from src import db
-from .entity import Entity
 
 
-class User(Entity):
+class User(db.Model):
     __tablename__ = 'users'
 
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
 
-    def __init__(self, username, password, created_by):
-        Entity.__init__(self, created_by)
+    def __init__(self, username, password):
         self.username = username
         self.set_password(password)
 
@@ -23,6 +22,10 @@ class User(Entity):
         if not self.password:
             return None
         return check_password_hash(self.password, password)
+
+    @classmethod
+    def find_by_username(cls, username):
+        return cls.query.filter_by(username=username).first()
 
 
 class UserShcema(Schema):
