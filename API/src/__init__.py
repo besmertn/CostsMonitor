@@ -33,5 +33,5 @@ def create_app(config_object=Config):
 def check_if_token_in_blacklist(decrypted_token):
     from .entities.revoked_token import RevokedToken
     jti = decrypted_token['jti']
-    print('Is token in blacklist {}'.format(RevokedToken.is_jti_blacklisted(jti)))
+
     return RevokedToken.is_jti_blacklisted(jti)

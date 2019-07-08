@@ -104,3 +104,4 @@ ENV/
 *.iml
 .DS_Store
 .vscode/settings.json
+API/app.db

@@ -44,9 +44,10 @@ def login():
     if current_user.check_password(posted_user.data['password']):
         access_token = create_access_token(identity=posted_user.data['username'])
         refresh_token = create_refresh_token(identity=posted_user.data['username'])
-        return jsonify({'message': 'Logged in as {}'.format(current_user.username),
-                        'access_token': access_token,
-                        'refresh_token': refresh_token}), 200
+        user = UserShcema(only=('username', 'password')).dump(current_user)
+        return jsonify(user=user.data,
+                       access_token=access_token,
+                       refresh_token=refresh_token), 200
     else:
         return jsonify({'message': 'Wrong credentials'}), 401
 
@@ -87,7 +88,11 @@ def token_refresh():
     return jsonify({'access_token': access_token}), 200
 
 
-@bp.route('/secret', methods=['POST'])
+@bp.route('/users', methods=['GET'])
 @jwt_required
 def secret():
-    return jsonify({'message': 42}), 200
+    user_objects = db.session.query(User).all()
+    schema = UserShcema(many=True, only=('username', 'password'))
+    users = schema.dump(user_objects)
+
+    return jsonify(users.data), 200
